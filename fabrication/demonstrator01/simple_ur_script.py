@@ -67,8 +67,28 @@ def move_l_blend(plane_to, vel, blend_radius = 0):
     # Format UR script
     script = "movel(%s, v = %.2f, r = %.4f)\n"%(_pose_fmt,  vel, blend_radius)
     return script
+def move_j(joints, accel, vel):
+    """
+    Function that returns UR script for linear movement in joint space.
 
-def move_j(joints, accel, vel, time, blendradius):
+    Args:
+        joints: A list of 6 joint angles (double).
+        accel: tool accel in m/s^2
+        accel: tool accel in m/s^2
+        vel: tool speed in m/s
+
+
+    Returns:
+        script: UR script
+    """
+    # Check acceleration and velocity are non-negative and below a set limit
+
+    _j_fmt = "[" + ("%.4f,"*6)[:-1]+"]"
+    _j_fmt = _j_fmt%tuple(joints)
+    script = "movej(%s, a = %.2f, v = %.2f)\n"%(_j_fmt,accel,vel)
+    return script
+
+def move_j_blend(joints, accel, vel, time, blendradius):
     """
     Function that returns UR script for linear movement in joint space.
 
@@ -85,7 +105,7 @@ def move_j(joints, accel, vel, time, blendradius):
     """
     # Check acceleration and velocity are non-negative and below a set limit
 
-    _j_fmt = "[" + ("%.2f,"*6)[:-1]+"]"
+    _j_fmt = "[" + ("%.4f,"*6)[:-1]+"]"
     _j_fmt = _j_fmt%tuple(joints)
     script = "movej(%s, a = %.2f, v = %.2f, t = %s, r = %s)\n"%(_j_fmt,accel,vel,time,blendradius)
     #script = "movej(%s, a = %.2f, v = %.2f)\n"%(_j_fmt,accel,vel)
