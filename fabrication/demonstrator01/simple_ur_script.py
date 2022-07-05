@@ -186,6 +186,20 @@ def popup(message, title):
     script = 'popup("%s","%s",blocking = True) \n' %(message,title)
     return script
 
+def popup_stop(message, title):
+    """
+    Function that returns UR script for popup AND stops program until continue is pressed
+
+    Args:
+        message: float. tooltip offset in mm
+        title: float. tooltip offset in mm
+
+    Returns:
+        script: UR script
+    """
+    script = 'popup("%s","%s", blocking = True) \n' %(message,title)
+    return script
+    
 def sleep(time):
     """
     Function that returns UR script for sleep()

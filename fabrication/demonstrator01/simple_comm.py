@@ -1,3 +1,4 @@
+import math
 import socket
 from struct import *
 
@@ -63,7 +64,7 @@ def send_script(script_to_send,robot_ip):
     s.close()
 
 def listen_to_robot(robot_ip):
-    PORT = 30003
+    PORT = 30003  
     HOST = robot_ip
     # Create dictionary to store data
     chunks={}
@@ -72,6 +73,7 @@ def listen_to_robot(robot_ip):
     chunks["forces"] = []
     chunks["pose"] = []
     chunks["time"] = [0]
+    chunks["d_out"] = []
 
     data = read(HOST, PORT)
     get_messages(data, chunks)
@@ -89,12 +91,12 @@ def read(HOST, PORT):
     s.settimeout(1)
     try:
         s.connect((HOST, PORT))
-        print "connected"
+        print ("connected")
     except:
         traceback.print_exc()
-        print "Cannot connect to ",HOST,PORT
+        print ("Cannot connect to "),HOST,PORT
     s.settimeout(None)
-    data = s.recv(1024)
+    data = s.recv(2048)
     s.close()
     return data
 
@@ -106,6 +108,7 @@ def get_messages(bytes, chunks_info):
     3) TCP force
     4) Tool Vector
     5) Time
+    6) digital_out
 
     This data is formatted and the chunks dictionary is updated
     for more info see: http://wiki03.lynero.net/Technical/RealTimeClientInterface
@@ -118,6 +121,7 @@ def get_messages(bytes, chunks_info):
     tcp_force = bytes[540:588]
     tool_vector = bytes[588:636]
     controller_time = bytes[740:748]
+    dig_out = bytes[1044:1052]
 
     # format type: int,
     fmt_double6 = "!dddddd"
@@ -126,11 +130,18 @@ def get_messages(bytes, chunks_info):
     #Unpack selected data
     target_joints = unpack(fmt_double6,q_target)
     chunks_info["target_joints"]= (math.degrees(j) for j in target_joints)
+    
     actual_joints = unpack(fmt_double6,q_actual)
     chunks_info["actual_joints"]= (math.degrees(j) for j in actual_joints)
+    
     forces = unpack(fmt_double6,tcp_force)
     chunks_info["forces"]= forces
+    
     pose = unpack(fmt_double6,tool_vector)
     chunks_info["pose"]= pose
+    
     time = unpack(fmt_double1,controller_time)
     chunks_info["time"]= time
+
+    d_out = unpack(fmt_double1,dig_out)
+    chunks_info["d_out"]= d_out
