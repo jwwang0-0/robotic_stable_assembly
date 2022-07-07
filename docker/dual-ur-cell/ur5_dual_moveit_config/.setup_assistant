@@ -1,0 +1,11 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: ur5_dual_support
+    relative_path: urdf/ur5_dual_cell.urdf
+    xacro_args: ""
+  SRDF:
+    relative_path: config/ur5_dual_cell.srdf
+  CONFIG:
+    author_name: Gonzalo Casas
+    author_email: casas@arch.ethz.ch
+    generated_timestamp: 1657198349

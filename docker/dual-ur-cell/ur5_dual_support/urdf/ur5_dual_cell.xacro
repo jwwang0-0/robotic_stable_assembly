@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur5_dual_cell">
+  <xacro:include filename="$(find ur_description)/urdf/inc/ur5_macro.xacro"/>
+
+  <xacro:ur5_robot prefix="robotA_"/>
+  <xacro:ur5_robot prefix="robotB_"/>
+
+  <link name="world" />
+
+  <joint name="robotA_joint" type="fixed">
+    <parent link="world" />
+    <child link="robotA_base_link" />
+    <origin xyz="-0.001487 0.999346 0.424999" rpy="0.000894 -0.000486 -1.568925"/>
+  </joint>
+
+  <joint name="robotB_joint" type="fixed">
+    <parent link="world" />
+    <child link = "robotB_base_link" />
+    <origin xyz="-0.007841 0.304415 1.790672" rpy="-3.136554 -0.000952 -3.138549"/>
+  </joint>
+
+</robot>

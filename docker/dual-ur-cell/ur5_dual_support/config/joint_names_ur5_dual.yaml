@@ -1,0 +1,1 @@
+controller_joint_names: ['robotA_joint1', 'robotA_joint2', 'robotA_joint3', 'robotA_joint4', 'robotA_joint5', 'robotA_joint6', 'robotB_joint1', 'robotB_joint2', 'robotB_joint3', 'robotB_joint4', 'robotB_joint5', 'robotB_joint6']

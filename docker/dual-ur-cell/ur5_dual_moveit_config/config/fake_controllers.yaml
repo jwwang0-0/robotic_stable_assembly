@@ -1,0 +1,24 @@
+controller_list:
+  - name: fake_robotA_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - robotA_shoulder_pan_joint
+      - robotA_shoulder_lift_joint
+      - robotA_elbow_joint
+      - robotA_wrist_1_joint
+      - robotA_wrist_2_joint
+      - robotA_wrist_3_joint
+  - name: fake_robotB_controller
+    type: $(arg fake_execution_type)
+    joints:
+      - robotB_shoulder_pan_joint
+      - robotB_shoulder_lift_joint
+      - robotB_elbow_joint
+      - robotB_wrist_1_joint
+      - robotB_wrist_2_joint
+      - robotB_wrist_3_joint
+initial:  # Define initial robot poses per group
+  - group: robotA
+    pose: homeB
+  - group: robotB
+    pose: homeB
