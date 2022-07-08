@@ -27,12 +27,20 @@ if __name__ == '__main__':
 
     ################################################################
     #Create Geometry
+    #Scale to the Requested Range (5*5*5)
     ################################################################
     assembly = CRA_Assembly()
     N = 12
     arch = CRA_Arch(rise = 150, span = 300, thickness = 20, depth = 20, n = N)
+    box = arch.bounding_box()
+    scale_base = max(box.xsize, box.ysize, box.zsize)
+    scale_to = 5
+    scale_factor = scale_to / scale_base
+    s0 = Scale.from_factors([scale_factor] * 3)
+
     for i, block in enumerate(arch.blocks()):
-        assembly.add_block(Block.from_shape(block), key=i)
+        block2 = block.transformed(s0)
+        assembly.add_block(Block.from_shape(block2), key=i)
     
     assembly.set_boundary_conditions([0,N-1])
     
@@ -46,13 +54,13 @@ if __name__ == '__main__':
     #     assembly.add_interfaces_from_meshes([interface], keys[i][0] , keys[i][1])
     
     #Method 02#
-    assembly_interfaces_numpy(assembly, nmax=10, amin=1e-1, tmax=1e-6)
+    assembly_interfaces_numpy(assembly, nmax=10, amin=1e-2, tmax=1e-6)
 
     ################################################################
     #Apply Safety Factor
     ################################################################
     
-    safety_factor = 0.35
+    safety_factor = 0.9
 
     for edge in assembly.edges():
         interfaces = assembly.edge_attribute(edge, "interfaces")
@@ -90,4 +98,4 @@ if __name__ == '__main__':
     
     #cra_penalty_solve(assembly, verbose=True, density=d, d_bnd=dispbnd, eps=overlap, mu=mu)
     cra_view(assembly, resultant=False, nodal=True, grid=False, weights=False,
-             displacements=False, dispscale=1, scale=1/10*d)
+             displacements=False, dispscale=1, scale=1000*d)
