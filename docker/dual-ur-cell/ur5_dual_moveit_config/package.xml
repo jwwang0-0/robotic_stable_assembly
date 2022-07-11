@@ -5,8 +5,8 @@
   <description>
      An automatically generated package with all the configuration and launch files for using the ur5_dual_cell with the MoveIt Motion Planning Framework
   </description>
-  <author email="casas@arch.ethz.ch">Gonzalo Casas</author>
-  <maintainer email="casas@arch.ethz.ch">Gonzalo Casas</maintainer>
+  <author email="lwenjun@student.ethz.ch">Wenjun Liu</author>
+  <maintainer email="lwenjun@student.ethz.ch">Wenjun Liu</maintainer>
 
   <license>BSD</license>
 
