@@ -19,6 +19,6 @@ controller_list:
       - robotB_wrist_3_joint
 initial:  # Define initial robot poses per group
   - group: robotA
-    pose: homeB
+    pose: HomeA
   - group: robotB
-    pose: homeB
+    pose: HomeB
