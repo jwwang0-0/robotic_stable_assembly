@@ -3,7 +3,7 @@
   <arg name="paused" default="false"/>
   <arg name="gazebo_gui" default="true"/>
   <arg name="initial_joint_positions" doc="Initial joint configuration of the robot"
-       default=" -J robotA_elbow_joint 0 -J robotA_shoulder_lift_joint 0 -J robotA_shoulder_pan_joint 0 -J robotA_wrist_1_joint 0 -J robotA_wrist_2_joint 0 -J robotA_wrist_3_joint 0 -J robotB_elbow_joint 0 -J robotB_shoulder_lift_joint 0 -J robotB_shoulder_pan_joint 0 -J robotB_wrist_1_joint 0 -J robotB_wrist_2_joint 0 -J robotB_wrist_3_joint 0"/>
+       default=" -J robotA_elbow_joint 2.2737 -J robotA_shoulder_lift_joint -1.0761 -J robotA_shoulder_pan_joint -2.8812 -J robotA_wrist_1_joint -2.4646 -J robotA_wrist_2_joint 5.1028 -J robotA_wrist_3_joint 0 -J robotB_elbow_joint 2.3778 -J robotB_shoulder_lift_joint -0.8678 -J robotB_shoulder_pan_joint -0.1041 -J robotB_wrist_1_joint -1.0761 -J robotB_wrist_2_joint 1.7704 -J robotB_wrist_3_joint 0.1736"/>
 
   <!-- startup simulated world -->
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
@@ -13,7 +13,7 @@
   </include>
 
   <!-- send robot urdf to param server -->
-  <param name="robot_description" textfile="$(find ur5_dual_support)/urdf/ur5_dual_cell.urdf" />
+  <param name="robot_description" command="xacro  '$(find ur5_dual_support)/urdf/ur5_dual_cell.xacro'" />
 
   <!-- unpause only after loading robot model -->
   <arg name="unpause" value="$(eval '' if arg('paused') else '-unpause')" />

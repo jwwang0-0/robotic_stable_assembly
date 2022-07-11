@@ -16,68 +16,48 @@
         <chain base_link="robotB_base_link" tip_link="robotB_tool0"/>
     </group>
     <!--GROUP STATES: Purpose: Define a named state for a particular group, in terms of joint values. This is useful to define states like 'folded arms'-->
-    <group_state name="homeB" group="robotA">
-        <joint name="robotA_elbow_joint" value="0"/>
-        <joint name="robotA_shoulder_lift_joint" value="0"/>
-        <joint name="robotA_shoulder_pan_joint" value="0"/>
-        <joint name="robotA_wrist_1_joint" value="0"/>
-        <joint name="robotA_wrist_2_joint" value="0"/>
+    <group_state name="HomeA" group="robotA">
+        <joint name="robotA_elbow_joint" value="2.2737"/>
+        <joint name="robotA_shoulder_lift_joint" value="-1.0761"/>
+        <joint name="robotA_shoulder_pan_joint" value="-2.8812"/>
+        <joint name="robotA_wrist_1_joint" value="-2.4646"/>
+        <joint name="robotA_wrist_2_joint" value="5.1028"/>
         <joint name="robotA_wrist_3_joint" value="0"/>
     </group_state>
-    <group_state name="homeB" group="robotB">
-        <joint name="robotB_elbow_joint" value="0"/>
-        <joint name="robotB_shoulder_lift_joint" value="0"/>
-        <joint name="robotB_shoulder_pan_joint" value="0"/>
-        <joint name="robotB_wrist_1_joint" value="0"/>
-        <joint name="robotB_wrist_2_joint" value="0"/>
-        <joint name="robotB_wrist_3_joint" value="0"/>
+    <group_state name="HomeB" group="robotB">
+        <joint name="robotB_elbow_joint" value="2.3778"/>
+        <joint name="robotB_shoulder_lift_joint" value="-0.8678"/>
+        <joint name="robotB_shoulder_pan_joint" value="-0.1041"/>
+        <joint name="robotB_wrist_1_joint" value="-1.0761"/>
+        <joint name="robotB_wrist_2_joint" value="1.7704"/>
+        <joint name="robotB_wrist_3_joint" value="0.1736"/>
     </group_state>
     <!--VIRTUAL JOINT: Purpose: this element defines a virtual joint between a robot link and an external frame of reference (considered fixed with respect to the robot)-->
     <virtual_joint name="virtual_joint" type="fixed" parent_frame="world" child_link="world"/>
     <!--DISABLE COLLISIONS: By default it is assumed that any link of the robot could potentially come into collision with any other link in the robot. This tag disables collision checking between a specified pair of links. -->
     <disable_collisions link1="robotA_base_link_inertia" link2="robotA_shoulder_link" reason="Adjacent"/>
     <disable_collisions link1="robotA_base_link_inertia" link2="robotB_base_link_inertia" reason="Adjacent"/>
-    <disable_collisions link1="robotA_base_link_inertia" link2="robotB_forearm_link" reason="Never"/>
     <disable_collisions link1="robotA_base_link_inertia" link2="robotB_shoulder_link" reason="Never"/>
     <disable_collisions link1="robotA_base_link_inertia" link2="robotB_upper_arm_link" reason="Never"/>
-    <disable_collisions link1="robotA_base_link_inertia" link2="robotB_wrist_1_link" reason="Never"/>
-    <disable_collisions link1="robotA_base_link_inertia" link2="robotB_wrist_2_link" reason="Never"/>
-    <disable_collisions link1="robotA_base_link_inertia" link2="robotB_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="robotA_base_link_inertia" link2="robotB_wrist_2_link" reason="Default"/>
     <disable_collisions link1="robotA_forearm_link" link2="robotA_upper_arm_link" reason="Adjacent"/>
     <disable_collisions link1="robotA_forearm_link" link2="robotA_wrist_1_link" reason="Adjacent"/>
-    <disable_collisions link1="robotA_forearm_link" link2="robotB_base_link_inertia" reason="Never"/>
-    <disable_collisions link1="robotA_forearm_link" link2="robotB_shoulder_link" reason="Never"/>
-    <disable_collisions link1="robotA_forearm_link" link2="robotB_upper_arm_link" reason="Never"/>
     <disable_collisions link1="robotA_shoulder_link" link2="robotA_upper_arm_link" reason="Adjacent"/>
     <disable_collisions link1="robotA_shoulder_link" link2="robotB_base_link_inertia" reason="Never"/>
-    <disable_collisions link1="robotA_shoulder_link" link2="robotB_forearm_link" reason="Never"/>
+    <disable_collisions link1="robotA_shoulder_link" link2="robotB_forearm_link" reason="Default"/>
     <disable_collisions link1="robotA_shoulder_link" link2="robotB_shoulder_link" reason="Never"/>
     <disable_collisions link1="robotA_shoulder_link" link2="robotB_upper_arm_link" reason="Never"/>
-    <disable_collisions link1="robotA_shoulder_link" link2="robotB_wrist_1_link" reason="Never"/>
-    <disable_collisions link1="robotA_shoulder_link" link2="robotB_wrist_2_link" reason="Never"/>
-    <disable_collisions link1="robotA_shoulder_link" link2="robotB_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="robotA_shoulder_link" link2="robotB_wrist_1_link" reason="Default"/>
+    <disable_collisions link1="robotA_shoulder_link" link2="robotB_wrist_2_link" reason="Default"/>
     <disable_collisions link1="robotA_upper_arm_link" link2="robotB_base_link_inertia" reason="Never"/>
-    <disable_collisions link1="robotA_upper_arm_link" link2="robotB_forearm_link" reason="Never"/>
     <disable_collisions link1="robotA_upper_arm_link" link2="robotB_shoulder_link" reason="Never"/>
-    <disable_collisions link1="robotA_upper_arm_link" link2="robotB_upper_arm_link" reason="Never"/>
-    <disable_collisions link1="robotA_upper_arm_link" link2="robotB_wrist_1_link" reason="Never"/>
-    <disable_collisions link1="robotA_upper_arm_link" link2="robotB_wrist_2_link" reason="Never"/>
-    <disable_collisions link1="robotA_upper_arm_link" link2="robotB_wrist_3_link" reason="Never"/>
+    <disable_collisions link1="robotA_upper_arm_link" link2="robotB_wrist_1_link" reason="Default"/>
+    <disable_collisions link1="robotA_upper_arm_link" link2="robotB_wrist_2_link" reason="Default"/>
     <disable_collisions link1="robotA_wrist_1_link" link2="robotA_wrist_2_link" reason="Adjacent"/>
     <disable_collisions link1="robotA_wrist_1_link" link2="robotA_wrist_3_link" reason="Never"/>
-    <disable_collisions link1="robotA_wrist_1_link" link2="robotB_base_link_inertia" reason="Never"/>
-    <disable_collisions link1="robotA_wrist_1_link" link2="robotB_shoulder_link" reason="Never"/>
-    <disable_collisions link1="robotA_wrist_1_link" link2="robotB_upper_arm_link" reason="Never"/>
     <disable_collisions link1="robotA_wrist_2_link" link2="robotA_wrist_3_link" reason="Adjacent"/>
-    <disable_collisions link1="robotA_wrist_2_link" link2="robotB_base_link_inertia" reason="Never"/>
-    <disable_collisions link1="robotA_wrist_2_link" link2="robotB_shoulder_link" reason="Never"/>
-    <disable_collisions link1="robotA_wrist_2_link" link2="robotB_upper_arm_link" reason="Never"/>
-    <disable_collisions link1="robotA_wrist_2_link" link2="robotB_wrist_1_link" reason="Never"/>
+    <disable_collisions link1="robotA_wrist_2_link" link2="robotB_wrist_3_link" reason="Never"/>
     <disable_collisions link1="robotA_wrist_3_link" link2="robotB_base_link_inertia" reason="Never"/>
-    <disable_collisions link1="robotA_wrist_3_link" link2="robotB_shoulder_link" reason="Never"/>
-    <disable_collisions link1="robotA_wrist_3_link" link2="robotB_upper_arm_link" reason="Never"/>
-    <disable_collisions link1="robotA_wrist_3_link" link2="robotB_wrist_1_link" reason="Never"/>
-    <disable_collisions link1="robotA_wrist_3_link" link2="robotB_wrist_3_link" reason="Never"/>
     <disable_collisions link1="robotB_base_link_inertia" link2="robotB_shoulder_link" reason="Adjacent"/>
     <disable_collisions link1="robotB_forearm_link" link2="robotB_upper_arm_link" reason="Adjacent"/>
     <disable_collisions link1="robotB_forearm_link" link2="robotB_wrist_1_link" reason="Adjacent"/>
