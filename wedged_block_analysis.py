@@ -24,6 +24,7 @@ if __name__ == '__main__':
     
 
     from arch import CRA_Arch
+    from math import radians
 
     ################################################################
     #Create Geometry
@@ -37,9 +38,21 @@ if __name__ == '__main__':
     scale_to = 5
     scale_factor = scale_to / scale_base
     s0 = Scale.from_factors([scale_factor] * 3)
+    wedge_angle = 2
 
     for i, block in enumerate(arch.blocks()):
-        block2 = block.transformed(s0)
+
+        if i == 0:
+            wedge_block = arch.wedged_block(i,0,radians(wedge_angle))
+        elif i==N-1:
+            wedge_block = arch.wedged_block(i,0,0)
+        elif i== N-2:
+            wedge_block = arch.wedged_block(i,0,0)
+        elif i==N-3:
+            wedge_block = arch.wedged_block(i,radians(-wedge_angle),0)
+        else:
+            wedge_block = arch.wedged_block(i,radians(-wedge_angle),radians(wedge_angle))
+        block2 = wedge_block.transformed(s0)
         assembly.add_block(Block.from_shape(block2), key=i)
     
     assembly.set_boundary_conditions([0,N-1])
@@ -54,18 +67,17 @@ if __name__ == '__main__':
     #     assembly.add_interfaces_from_meshes([interface], keys[i][0] , keys[i][1])
     
     #Method 02#
-    assembly_interfaces_numpy(assembly, nmax=10, amin=1e-2, tmax=1e-6)
+    assembly_interfaces_numpy(assembly, nmax=10, amin=1e-3, tmax=1e-6)
 
     ################################################################
     #Apply Safety Factor
     ################################################################
     
-    safety_factor = 0.9
+    safety_factor = 0.4
 
     for edge in assembly.edges():
         interfaces = assembly.edge_attribute(edge, "interfaces")
         for interface in interfaces:
-
             #Update the area of the interface
             interface.size = safety_factor * interface.size
 
@@ -92,10 +104,11 @@ if __name__ == '__main__':
     mu = 0.9
     dispbnd = 1e-1
     overlap = 1e-3
-    d = 0.15
-    
+    d = 1
     cra_solve(assembly, verbose=True, density=d, d_bnd=dispbnd, eps=overlap, mu=mu)
+    #cra_penalty_solve(assembly, verbose=True, density=d, d_bnd=dispbnd, eps=overlap, mu=mu)
+    cra_view(assembly, resultant=False, nodal=True, grid=False, weights=False, edge = False,
+        displacements=False, dispscale=1, scale=10*d)
+    
     
     #cra_penalty_solve(assembly, verbose=True, density=d, d_bnd=dispbnd, eps=overlap, mu=mu)
-    cra_view(assembly, resultant=False, nodal=True, grid=False, weights=False,
-             displacements=False, dispscale=1, scale=1000*d)
