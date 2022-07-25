@@ -41,20 +41,37 @@ if __name__ == '__main__':
     scale_to = 5
     scale_factor = scale_to / scale_base
     s0 = Scale.from_factors([scale_factor] * 3)
-    wedge_angle = 1
+    wedge_angle = 2
 
     for i, block in enumerate(arch.blocks()):
 
+        # if i == 0:
+        #     wedge_block, _ = arch.wedged_block(i,0,radians(wedge_angle))
+        # elif i==N-1:
+        #     wedge_block, _ = arch.wedged_block(i,0,0)
+        # elif i== N-2:
+        #     wedge_block, _ = arch.wedged_block(i,0,0)
+        # elif i==N-3:
+        #     wedge_block, _ = arch.wedged_block(i,radians(-wedge_angle),0)
+        # else:
+        #     wedge_block, _ = arch.wedged_block(i,radians(-wedge_angle),radians(wedge_angle))
         if i == 0:
-            wedge_block = arch.wedged_block(i,0,radians(wedge_angle))
+            wedge_block, _ = arch.wedged_block(i,0,radians(wedge_angle))
         elif i==N-1:
-            wedge_block = arch.wedged_block(i,0,0)
+            wedge_block, _  = arch.wedged_block(i,0,0)
         elif i== N-2:
-            wedge_block = arch.wedged_block(i,0,0)
+            wedge_block, _  = arch.wedged_block(i,0,0)
         elif i==N-3:
-            wedge_block = arch.wedged_block(i,radians(-wedge_angle),0)
+            wedge_block, _  = arch.wedged_block(i,radians(wedge_angle),0)
+        elif i==N/2-1:
+            wedge_block, _  = arch.wedged_block(i,radians(-wedge_angle),0)
+        elif i==N/2:
+            wedge_block, _  = arch.wedged_block(i,0,radians(-wedge_angle))
+        elif i>N/2:
+            wedge_block, _  = arch.wedged_block(i,radians(wedge_angle),radians(-wedge_angle))
         else:
-            wedge_block = arch.wedged_block(i,radians(-wedge_angle),radians(wedge_angle))
+            wedge_block, _  = arch.wedged_block(i,radians(-wedge_angle),radians(wedge_angle))
+        
         block2 = wedge_block.transformed(s0)
         assembly.add_block(Block.from_shape(block2), key=i)
     
@@ -85,21 +102,44 @@ if __name__ == '__main__':
         safety_factor -= reduction_number
 
         try:
+            ## Make a copy of the assembly and modify the interfaces
             assembly_copy = assembly.copy()
             for edge in assembly_copy.edges():
                 interfaces = assembly_copy.edge_attribute(edge, "interfaces")
-                for interface in interfaces:
+                if len(interfaces) == 1:
+                    for interface in interfaces:
+                        #Update the area of the interface
+                        interface.size = safety_factor * interface.size
 
-                    #Update the area of the interface
-                    interface.size = safety_factor * interface.size
+                        #Update points of the interface
+                        pl = Polygon(interface.points)
+                        center = pl.centroid
+                        s = Scale.from_factors([mt.pow(safety_factor,0.5)]*3, Frame(center,[1,0,0],[0,1,0]))
+                        pl_scaled = pl.transformed(s)
+                        interface.points = pl_scaled.points
+                if len(interfaces) == 2:
+                    #Only works with symmetrical interface right now
+                    #Step 0 Find the intersect middle
 
-                    #Update points of the interface
-                    pl = Polygon(interface.points)
-                    center = pl.centroid
-                    s = Scale.from_factors([mt.pow(safety_factor,0.5)]*3, Frame(center,[1,0,0],[0,1,0]))
-                    pl_scaled = pl.transformed(s)
-                    interface.points = pl_scaled.points
+                    pls = [Polygon(interface.points) for interface in interfaces]
+                    mesh = Mesh.from_polygons(pls)
+                    pts = mesh.face_adjacency_vertices(0,1)
 
+                    for edge in mesh.edges():                
+                        if (edge[0] in pts) and ( edge[1] in pts):
+                            edge_middle = mesh.edge_point(edge[0],edge[1],0.5)
+                    
+                    #Step 1 offset based on intersect middle
+                    for interface in interfaces:
+                        #Update the area of the interface
+                        interface.size = safety_factor * interface.size
+
+                        #Update points of the interface
+                        pl = Polygon(interface.points)
+                        center = pl.centroid
+                        s = Scale.from_factors([mt.pow(safety_factor,0.5)]*3, Frame(edge_middle,[1,0,0],[0,1,0]))
+                        pl_scaled = pl.transformed(s)
+                        interface.points = pl_scaled.points
 
             ################################################################
             #Solve and Visualization

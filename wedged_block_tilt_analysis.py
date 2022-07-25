@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 """
-Test to evalute arch 
+Test to evalute stability of the arch
 """
 
 
@@ -38,7 +38,7 @@ if __name__ == '__main__':
     scale_to = 5
     scale_factor = scale_to / scale_base
     s0 = Scale.from_factors([scale_factor] * 3)
-    wedge_angle = 2
+    wedge_angle = 5
 
     for i, block in enumerate(arch.blocks()):
 
@@ -64,6 +64,13 @@ if __name__ == '__main__':
     
 
     assembly.set_boundary_conditions([0,N-1])
+    ################################################################
+    #Rotate the assembly for tilting table test
+    ################################################################
+
+    deg = 0  # rotation in degree
+    rad = deg * mt.pi / 180
+    assembly.rotate_assembly([0, 0, 0], [0, 1, 0], rad)  # around y-axis
     
     ################################################################
     #Create Analysis Interfaces
@@ -81,47 +88,44 @@ if __name__ == '__main__':
     #Apply Safety Factor
     ################################################################
     
-    safety_factor = 0.25
+    # safety_factor = 1
 
-    for edge in assembly.edges():
-        interfaces = assembly.edge_attribute(edge, "interfaces")
-        if len(interfaces) == 1:
-            for interface in interfaces:
-                #Update the area of the interface
-                interface.size = safety_factor * interface.size
+    # for edge in assembly.edges():
+    #     interfaces = assembly.edge_attribute(edge, "interfaces")
+    #     if len(interfaces) == 1:
+    #         for interface in interfaces:
+    #             #Update the area of the interface
+    #             interface.size = safety_factor * interface.size
 
-                #Update points of the interface
-                pl = Polygon(interface.points)
-                center = pl.centroid
-                s = Scale.from_factors([mt.pow(safety_factor,0.5)]*3, Frame(center,[1,0,0],[0,1,0]))
-                pl_scaled = pl.transformed(s)
-                interface.points = pl_scaled.points
-        if len(interfaces) == 2:
-            #Only works with symmetrical interface right now
-            #Step 0 Find the intersect middle
+    #             #Update points of the interface
+    #             pl = Polygon(interface.points)
+    #             center = pl.centroid
+    #             s = Scale.from_factors([mt.pow(safety_factor,0.5)]*3, Frame(center,[1,0,0],[0,1,0]))
+    #             pl_scaled = pl.transformed(s)
+    #             interface.points = pl_scaled.points
+    #     if len(interfaces) == 2:
+    #         #Only works with symmetrical interface right now
+    #         #Step 0 Find the intersect middle
 
-            pls = [Polygon(interface.points) for interface in interfaces]
-            mesh = Mesh.from_polygons(pls)
-            pts = mesh.face_adjacency_vertices(0,1)
+    #         pls = [Polygon(interface.points) for interface in interfaces]
+    #         mesh = Mesh.from_polygons(pls)
+    #         pts = mesh.face_adjacency_vertices(0,1)
 
-            for edge in mesh.edges():                
-                if (edge[0] in pts) and ( edge[1] in pts):
-                    edge_middle = mesh.edge_point(edge[0],edge[1],0.5)
+    #         for edge in mesh.edges():                
+    #             if (edge[0] in pts) and ( edge[1] in pts):
+    #                 edge_middle = mesh.edge_point(edge[0],edge[1],0.5)
             
-            #Step 1 offset based on intersect middle
-            for interface in interfaces:
-                #Update the area of the interface
-                interface.size = safety_factor * interface.size
+    #         #Step 1 offset based on intersect middle
+    #         for interface in interfaces:
+    #             #Update the area of the interface
+    #             interface.size = safety_factor * interface.size
 
-                #Update points of the interface
-                pl = Polygon(interface.points)
-                center = pl.centroid
-                s = Scale.from_factors([mt.pow(safety_factor,0.5)]*3, Frame(edge_middle,[1,0,0],[0,1,0]))
-                pl_scaled = pl.transformed(s)
-                interface.points = pl_scaled.points
-
-
-
+    #             #Update points of the interface
+    #             pl = Polygon(interface.points)
+    #             center = pl.centroid
+    #             s = Scale.from_factors([mt.pow(safety_factor,0.5)]*3, Frame(edge_middle,[1,0,0],[0,1,0]))
+    #             pl_scaled = pl.transformed(s)
+    #             interface.points = pl_scaled.points
 
     ################################################################
     #Data Storage
@@ -140,17 +144,12 @@ if __name__ == '__main__':
     dispbnd = 1e-1
     overlap = 1e-3
     d = 1
-    summary = []
     
-    for i in range(15):
-        try:
-            cra_solve(assembly, verbose=True, density=d, d_bnd=dispbnd, eps=overlap, mu=mu)
-            summary.append("Successful")
-            break
-        except:
-            summary.append("Fail")
-    #cra_penalty_solve(assembly, verbose=True, density=d, d_bnd=dispbnd, eps=overlap, mu=mu)
-    print(summary)
+
+    #cra_solve(assembly, verbose=True, density=d, d_bnd=dispbnd, eps=overlap, mu=mu)
+
+    cra_penalty_solve(assembly, verbose=True, density=d, d_bnd=dispbnd, eps=overlap, mu=mu)
+
     cra_view(assembly, resultant=False, nodal=True, grid=False, weights=False, edge = False,
         displacements=False, dispscale=1, scale=10*d)
     
